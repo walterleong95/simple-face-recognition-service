@@ -16,13 +16,15 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/registerFace', methods=['POST'])
 def registerFace():
+    imgPath = None
     try:
         res = request.form
         image = request.files['image']
         image.save(os.path.join(app.config['UPLOAD_FOLDER'], str(res['name'])) + '.jpg')
 
         # type of ndarray
-        embeddings = fr.get_embeddings(['./' + app.config['UPLOAD_FOLDER'] + '/' + str(res['name']) + '.jpg'])
+        imgPath = './' + app.config['UPLOAD_FOLDER'] + '/' + str(res['name']) + '.jpg'
+        embeddings = fr.get_embeddings([imgPath])
         faceData = json.dumps(','.join(map(str, embeddings[0])))
         redis_client.set(res['name'], faceData)
         return {
@@ -34,6 +36,10 @@ def registerFace():
                    "ret": 400,
                    "msg": str(e)
                }, status.HTTP_400_BAD_REQUEST
+    finally:
+        if imgPath:
+            os.remove(imgPath)
+
 
 
 @app.route('/compareFace', methods=['POST'])

@@ -1,6 +1,3 @@
-# Here, we are going to calculate the similarity between fed image and the images in the dataset. To this end, we will use pre-calculated face embeddings.
-# Then, we will calculate the face embeddings of this new image and finally we'll performe the similarity between them and sort them in decreasing trend.
-# Then chosse the highist value. If this value be more than a thershold (0.5), we'll show the results, else the result is Unknown!
 # face verification with the VGGFace2 model
 import json
 from matplotlib import pyplot
@@ -39,7 +36,6 @@ def extract_face(filename, required_size=(224, 224)):
 # extract faces and calculate face embeddings for a list of photo files
 def get_embeddings(filenames):
     # create a vggface model
-    # Names = ['Angelina Jolie', 'Goh', 'Elena', 'Amin', 'Rahil', 'Leon', 'Ka Choon', 'Walter']
     model = VGGFace(model='resnet50', include_top=False, input_shape=(224, 224, 3), pooling='avg')
     # extract faces
     faces = [extract_face(f) for f in filenames]
